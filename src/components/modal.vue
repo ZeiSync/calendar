@@ -24,7 +24,6 @@
           />
         </TransitionChild>
 
-        <!-- This element is to trick the browser into centering the modal contents. -->
         <span
           class="hidden sm:inline-block sm:align-middle sm:h-screen"
           aria-hidden="true"
@@ -42,32 +41,7 @@
           <div
             class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
           >
-            <form class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              <!-- <div class="sm:flex sm:items-start">
-                <div
-                  class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
-                >
-                  <ExclamationIcon
-                    class="h-6 w-6 text-red-600"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                  <DialogTitle
-                    as="h3"
-                    class="text-lg leading-6 font-medium text-gray-900"
-                  >
-                    Deactivate account
-                  </DialogTitle>
-                  <div class="mt-2">
-                    <p class="text-sm text-gray-500">
-                        Are you sure you want to deactivate your account? All of
-                        your data will be permanently removed. This action cannot
-                        be undone.
-                      </p>
-                  </div>
-                </div>
-              </div> -->
+            <form class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4 w-full">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
                 for="eventTitle"
@@ -75,12 +49,13 @@
                 Event Title
               </label>
               <input
-                class="m-2 bg-gallery appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                class="mb-2 bg-gallery appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="eventTitle"
                 type="text"
                 placeholder="Enter title"
+                v-model="event.title"
               />
-              <div class="grid grid-cols-3 gap-3 m-2">
+              <div class="grid grid-cols-3 gap-3 mb-2">
                 <div>
                   <label
                     class="block text-gray-700 text-sm font-bold mb-2"
@@ -91,8 +66,8 @@
                   <input
                     readonly
                     id="currentDate"
-                    :value="currentDate.format('DD-MM-YYYY')"
-                    class="w-full bg-gallery appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                    v-model="event.date"
+                    class="w-full bg-gallery appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 <div>
@@ -106,6 +81,7 @@
                     id="hour"
                     :currentTime="currentDate.hour()"
                     :data="hourInDay"
+                    v-model="event.hour"
                   />
                 </div>
                 <div>
@@ -119,11 +95,24 @@
                     id="minute"
                     :currentTime="currentDate.minute()"
                     :data="minuteInDay"
+                    v-model="event.minute"
                   />
                 </div>
               </div>
 
-              <textarea class="bg-gallery rounded-sm" name="description" id="" cols="60" rows="5"></textarea>
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="description"
+              >
+                Description
+              </label>
+              <textarea
+                id="description"
+                class="bg-gallery rounded-sm w-full p-2"
+                name="description"
+                rows="5"
+                v-model="event.description"
+              ></textarea>
             </form>
             <div
               class="bg-bondi-blue px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"
@@ -136,7 +125,7 @@
                 Add Event
               </button>
               <button
-                type="button"
+                type="submit"
                 class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 @click="updateModalStatus(false)"
                 ref="cancelButtonRef"
@@ -151,8 +140,8 @@
   </TransitionRoot>
 </template>
 
-<script>
-import { computed, defineComponent } from "vue";
+<script lang="ts">
+import { computed, defineComponent, reactive, toRef, watch } from "vue";
 import { useStore } from "vuex";
 import {
   Dialog,
@@ -161,9 +150,12 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import fullCalendar from "@/composables/full-calendar";
-import SelectMenu from "./select-menu";
+import SelectMenu from "@/components/select-menu.vue";
 
 export default defineComponent({
+  props: {
+    datePicked: String,
+  },
   components: {
     Dialog,
     DialogOverlay,
@@ -171,15 +163,33 @@ export default defineComponent({
     TransitionRoot,
     SelectMenu,
   },
-  setup() {
+  setup(props) {
     const store = useStore();
     const { updateModalStatus } = fullCalendar();
     const currentDate = computed(() => store.state.currentDate);
     const open = computed(() => store.state.isOpenEventModal);
 
-    const hourInDay = Array.from({ length: 24 }, (_, i) => i + 1).join().split(',');
-    const minuteInDay = Array.from({ length: 24 }, (_, i) => i + 1).join().split(',');
+    const hourInDay = Array.from({ length: 24 }, (_, i) => i + 1)
+      .join()
+      .split(",");
+    const minuteInDay = Array.from({ length: 24 }, (_, i) => i + 1)
+      .join()
+      .split(",");
+    const datePicked = toRef(props, 'datePicked');
+    const event = reactive({
+      title: '',
+      date: datePicked.value,
+      hour: currentDate.value.hour().toString(),
+      minute: currentDate.value.minute().toString(),
+      description: ''
+    });
+    
+    watch(datePicked, () => {
+      event.date = datePicked.value;
+    })
+
     return {
+      event,
       open,
       updateModalStatus,
       hourInDay,

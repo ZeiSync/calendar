@@ -28,8 +28,11 @@
           <div class="flex flex-wrap border-t border-l">
             <template v-for="(date, idx) in daysInMonth" :key="idx">
               <div
-                class="border-r border-b px-4 pt-2 h-32 w-1/7"
-                @click="updateModalStatus(!open)"
+                class="border-r border-b px-4 pt-2 h-1/6 w-1/7"
+                @click="
+                  updateModalStatus(!open);
+                  datePicked = `${date.day}-${date.month}-${date.year}`;
+                "
                 :class="{
                   'text-bondi-blue': date.isPer || date.isNext,
                 }"
@@ -98,20 +101,20 @@
         </div>
       </div>
     </div>
-    <EventModal />
+    <EventModal :datePicked="datePicked"/>
   </div>
 </template>
 
-<script>
+<script lang='ts'>
 import { useStore } from "vuex";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import calendar from "@/composables/calendar";
 import fullCalendar from "@/composables/full-calendar";
-import EventModal from "./modal";
+import EventModal from "./modal.vue";
 
 export default defineComponent({
   components: {
-    EventModal,
+    EventModal
   },
   setup() {
     const store = useStore();
@@ -123,8 +126,10 @@ export default defineComponent({
     const daysInMonth = computed(() => store.state.daysInMonth);
     const open = computed(() => store.state.isOpenEventModal);
     const currentDate = computed(() => store.state.currentDate);
+    const datePicked = ref("");
 
     return {
+      datePicked,
       daysInMonth,
       open,
       dayinWeek,
@@ -132,9 +137,9 @@ export default defineComponent({
       currentDate,
       incrementTheMonth,
       decrementTheMonth,
-      updateModalStatus,
+      updateModalStatus
     };
-  },
+  }
 });
 </script>
 

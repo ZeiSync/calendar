@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev": "concurrently --raw --kill-others \"yarn serve\" \"(cd ../calendar-api & yarn start)\"",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
@@ -10,6 +11,8 @@
   "dependencies": {
     "@headlessui/vue": "^1.2.0",
     "@heroicons/vue": "^1.0.1",
+    "axios": "^0.21.1",
+    "concurrently": "^6.2.0",
     "core-js": "^3.6.5",
     "moment": "^2.29.1",
     "vue": "^3.0.0",

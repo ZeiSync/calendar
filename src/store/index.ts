@@ -8,7 +8,7 @@ export default createStore({
     currentDate: moment(),
     isOpenSideBar: true,
     isOpenEventModal: false,
-    eventData: {},
+    events: [],
   },
   getters: {
     currentDate(state) {

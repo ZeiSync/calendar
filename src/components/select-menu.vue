@@ -9,11 +9,6 @@
         class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
       >
         <span class="flex items-center">
-          <!-- <img
-            :src="selected"
-            alt=""
-            class="flex-shrink-0 h-6 w-6 rounded-full"
-          /> -->
           <span class="ml-3 block truncate">{{ selected }}</span>
         </span>
         <span
@@ -77,7 +72,6 @@ import { defineComponent, ref } from "vue";
 import {
   Listbox,
   ListboxButton,
-  ListboxLabel,
   ListboxOption,
   ListboxOptions,
 } from "@headlessui/vue";
@@ -94,7 +88,7 @@ export default defineComponent({
   },
   props: {
     currentTime: Number,
-    data: [],
+    data: Array,
   },
   setup(props) {
     const selected = ref(props.currentTime);

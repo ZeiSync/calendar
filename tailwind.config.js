@@ -1,3 +1,4 @@
+
 module.exports = {
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: false, // or 'media' or 'class'
@@ -10,6 +11,9 @@ module.exports = {
         '4/7': '57.1428571%',
         '5/7': '71.4285714%',
         '6/7': '85.7142857%',
+      },
+      height: {
+        '1/6': 'calc((100vh - 108px) / 6)'
       },
       colors: {
         'bright-gray': '#393E46',
