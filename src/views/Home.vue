@@ -1,7 +1,10 @@
 <template>
-  <div class="home">
+  <div class="home h-screen">
     <Header />
-    <SideBar />
+    <div class="flex justify-between">
+      <SideBar />
+      <FullCalendar />
+    </div>
   </div>
 </template>
 
@@ -9,12 +12,14 @@
 import { defineComponent } from "vue";
 import Header from "@/components/header.vue"; // @ is an alias to /src
 import SideBar from "@/components/sidebar/index.vue";
+import FullCalendar from "@/components/full-calendar.vue";
 
 export default defineComponent({
   name: "Home",
   components: {
     Header,
     SideBar,
+    FullCalendar
   }
 });
 </script>

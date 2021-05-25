@@ -1,17 +1,17 @@
 <template>
-  <div class="flex items-center justify-center mt-2">
+  <div class="flex items-center justify-center">
     <div
-      class="max-w-sm w-full rounded-md shadow-lg md:p-8 p-5 bg-white dark:bg-gray-80"
+      class="max-w-sm border-t shadow-sm p-5 bg-white dark:bg-gray-80"
     >
       <div class="px-1 flex items-center justify-between leading-8">
         <h1 class="text-base font-medium text-gray-800 dark:text-gray-100">
           {{ currentMonth }}
         </h1>
         <div class="flex items-center text-gray-800 dark:text-gray-100">
-          <button @click="decrementTheMonth(currentMonth, 1)">
+          <button class="focus:outline-none" @click="decrementTheMonth(currentMonth, 1)">
             <ChevronLeftIcon class="h-5 w-5 mr-2" aria-hidden="true" />
           </button>
-          <button @click="incrementTheMonth(currentMonth, 1)">
+          <button  class="focus:outline-none" @click="incrementTheMonth(currentMonth, 1)">
             <ChevronRightIcon class="h-5 w-5 ml-2" aria-hidden="true" />
           </button>
         </div>
@@ -34,9 +34,9 @@
         <button
           v-for="(date, index) in daysInMonth"
           :key="index"
-          class="w-10 py-2 rounded-full hover:bg-pantone-light hover:text-fog focus:outline-none"
+          class="w-10 py-2 rounded-full hover:bg-bondi-blue hover:text-gallery focus:outline-none"
           :class="{
-            'text-pantone': date.isPer || date.isNext,
+            'text-bondi-blue': date.isPer || date.isNext,
             isActive:
               date.day === currentDate.date() &&
               date.month === currentDate.month(),
@@ -51,8 +51,7 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, Ref, ref, watch, onBeforeMount, computed } from "vue";
-import moment from "moment";
+import { defineComponent, watch, onBeforeMount, computed } from "vue";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/outline";
 import calendar from "@/composables/calendar";
 import { useStore } from "vuex";
@@ -93,7 +92,7 @@ export default defineComponent({
 
 <style scoped>
 .isActive {
-  background-color: #5c8d89;
-  color: #f4f9f4;
+  background-color: #393E46;
+  color: #EEEEEE;
 }
 </style>

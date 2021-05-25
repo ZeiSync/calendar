@@ -6,11 +6,15 @@ export default createStore({
     daysInMonth: [],
     monthAndYear: moment().format("MMMM, YYYY"),
     currentDate: moment(),
+    isOpenSideBar: true,
+    isOpenEventModal: false,
+    eventData: {},
   },
   getters: {
     currentDate(state) {
       return state.currentDate;
-    }
+    },
+
   },
   mutations: {
     updateDaysInMonth(state, days) {
@@ -18,14 +22,24 @@ export default createStore({
     },
     updateCurrentDate(state, date) {
       state.currentDate = date;
+    },
+    updateSideBarStatus(state, status) {
+      state.isOpenSideBar = status;
+    },
+    updateMonthAndYear(state, date) {
+      state.monthAndYear = date;
+    },
+    updateEventModalStatus(state, status) {
+      state.isOpenEventModal = status
     }
+
   },
   actions: {
     incrementTheMonth({ commit }, { date, num }) {
-      commit(this.state.monthAndYear = moment(date).add(num, 'month').format("MMMM, YYYY"));
+      commit('updateMonthAndYear', moment(date).add(num, 'month').format("MMMM, YYYY"));
     },
     decrementTheMonth({ commit }, { date, num }) {
-      commit(this.state.monthAndYear = moment(date).subtract(num, 'month').format("MMMM, YYYY"));
+      commit('updateMonthAndYear', moment(date).subtract(num, 'month').format("MMMM, YYYY"));
     },
     getDaysInMonth({ commit }, { date }) {
       const firstDateOfMonth = moment(date).startOf('month');
@@ -36,6 +50,7 @@ export default createStore({
           return {
             day: day + 1,
             month: moment(date).month(),
+            year: moment(date).year(),
             isPer: false,
             isNext: false
           }
@@ -46,6 +61,7 @@ export default createStore({
         days.unshift({
           day: moment(date).subtract(i, 'day').date(),
           month: moment(date).subtract(1, 'month').month(),
+          year: moment(date).subtract(1, 'month').year(),
           isPer: true,
           isNext: false
         })
@@ -59,6 +75,7 @@ export default createStore({
             return {
               day: day + 1,
               month: moment(date).add(1, 'month').month(),
+              year: moment(date).add(1, 'month').year(),
               isPer: false,
               isNext: true
             }
@@ -78,6 +95,12 @@ export default createStore({
 
       commit('updateCurrentDate', moment(`${date.day}-${date.month + 1}-${year}`, "DD-MM-YYYY"))
     },
+    changeSideBarStatus({ commit }, status) {
+      commit('updateSideBarStatus', status);
+    },
+    changeEventModalStatus({ commit }, status) {
+      commit('updateEventModalStatus', status);
+    }
   },
   modules: {
   }
