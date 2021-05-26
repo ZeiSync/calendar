@@ -54,6 +54,7 @@
                 type="text"
                 placeholder="Enter title"
                 v-model="event.title"
+                required
               />
               <div class="grid grid-cols-3 gap-3 mb-2">
                 <div>
@@ -112,27 +113,28 @@
                 name="description"
                 rows="5"
                 v-model="event.description"
+                required
               ></textarea>
+              <div
+                class="bg-bondi-blue px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-lg"
+              >
+                <button
+                  type="submit"
+                  class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  @click="submitModal(event)"
+                >
+                  Add Event
+                </button>
+                <button
+                  type="button"
+                  class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                  @click="updateModalStatus(false)"
+                  ref="cancelButtonRef"
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
-            <div
-              class="bg-bondi-blue px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"
-            >
-              <button
-                type="button"
-                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                @click="updateModalStatus(false)"
-              >
-                Add Event
-              </button>
-              <button
-                type="submit"
-                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                @click="updateModalStatus(false)"
-                ref="cancelButtonRef"
-              >
-                Cancel
-              </button>
-            </div>
           </div>
         </TransitionChild>
       </div>
@@ -154,20 +156,20 @@ import SelectMenu from "@/components/select-menu.vue";
 
 export default defineComponent({
   props: {
-    datePicked: String,
+    datePicked: String
   },
   components: {
     Dialog,
     DialogOverlay,
     TransitionChild,
     TransitionRoot,
-    SelectMenu,
+    SelectMenu
   },
   setup(props) {
     const store = useStore();
-    const { updateModalStatus } = fullCalendar();
-    const currentDate = computed(() => store.state.currentDate);
-    const open = computed(() => store.state.isOpenEventModal);
+    const { updateModalStatus, submitModal } = fullCalendar();
+    const currentDate = computed(() => store.state.calendar.currentDate);
+    const open = computed(() => store.state.calendar.isOpenEventModal);
 
     const hourInDay = Array.from({ length: 24 }, (_, i) => i + 1)
       .join()
@@ -175,27 +177,32 @@ export default defineComponent({
     const minuteInDay = Array.from({ length: 24 }, (_, i) => i + 1)
       .join()
       .split(",");
-    const datePicked = toRef(props, 'datePicked');
+    const datePicked = toRef(props, "datePicked");
     const event = reactive({
-      title: '',
+      title: "",
       date: datePicked.value,
       hour: currentDate.value.hour().toString(),
       minute: currentDate.value.minute().toString(),
-      description: ''
+      description: ""
     });
-    
+
     watch(datePicked, () => {
       event.date = datePicked.value;
+    });
+
+    watch(open, () => {
+      console.log(open);
     })
 
     return {
+      submitModal,
       event,
       open,
       updateModalStatus,
       hourInDay,
       minuteInDay,
-      currentDate,
+      currentDate
     };
-  },
+  }
 });
 </script>

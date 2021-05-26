@@ -65,9 +65,9 @@ export default defineComponent({
     const { incrementTheMonth, decrementTheMonth, getDaysInMonth, updateCurrentDate } = calendar();
     const days: string[] = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
-    const currentDate = computed(() => store.state.currentDate);
-    const currentMonth = computed(() => store.state.monthAndYear);
-    const daysInMonth = computed(() => store.state.daysInMonth);
+    const currentDate = computed(() => store.state.calendar.currentDate);
+    const currentMonth = computed(() => store.state.calendar.monthAndYear);
+    const daysInMonth = computed(() => store.state.calendar.daysInMonth);
 
     onBeforeMount(() => {
       getDaysInMonth(currentMonth.value);

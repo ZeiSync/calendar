@@ -6,19 +6,19 @@ export default () => {
   const store = useStore();
 
   const incrementTheMonth = (date: MomentInput, num: number) => {
-    store.dispatch('incrementTheMonth', { date, num })
+    store.dispatch('calendar/incrementTheMonth', { date, num })
   }
 
   const decrementTheMonth = (date: MomentInput, num: number) => {
-    store.dispatch('decrementTheMonth', { date, num });
+    store.dispatch('calendar/decrementTheMonth', { date, num });
   }
 
   const getDaysInMonth = (date: MomentInput) => {
-    store.dispatch('getDaysInMonth', { date });
+    store.dispatch('calendar/getDaysInMonth', { date });
   }
 
   const updateCurrentDate = (date: MomentInput) => {
-    store.dispatch('updateCurrentDate', { date });
+    store.dispatch('calendar/updateCurrentDate', { date });
   }
   return { incrementTheMonth, decrementTheMonth, getDaysInMonth, updateCurrentDate }
 }

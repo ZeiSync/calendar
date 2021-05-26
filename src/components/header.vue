@@ -7,7 +7,7 @@
       >
         <button
           class="btn btn-sidebar bg-bondi-blue rounded-full text-gallery p-2 mr-2 focus:outline-none"
-          @click="store.dispatch('changeSideBarStatus', !open)"
+          @click="store.dispatch('calendar/changeSideBarStatus', !open)"
         >
           <MenuIcon class="h-6 w-6" aria-hidden="true" />
         </button>
@@ -145,8 +145,8 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    const open = computed(() => store.state.isOpenSideBar);
-    const today = computed(() => store.state.monthAndYear);
+    const open = computed(() => store.state.calendar.isOpenSideBar);
+    const today = computed(() => store.state.calendar.monthAndYear);
     return {
       store,
       open,

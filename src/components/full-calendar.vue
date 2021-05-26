@@ -122,10 +122,10 @@ export default defineComponent({
     const { incrementTheMonth, decrementTheMonth } = calendar();
     const { updateModalStatus } = fullCalendar();
 
-    const monthAndYear = computed(() => store.state.monthAndYear);
-    const daysInMonth = computed(() => store.state.daysInMonth);
-    const open = computed(() => store.state.isOpenEventModal);
-    const currentDate = computed(() => store.state.currentDate);
+    const monthAndYear = computed(() => store.state.calendar.monthAndYear);
+    const daysInMonth = computed(() => store.state.calendar.daysInMonth);
+    const open = computed(() => store.state.calendar.isOpenEventModal);
+    const currentDate = computed(() => store.state.calendar.currentDate);
     const datePicked = ref("");
 
     return {

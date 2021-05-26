@@ -31,7 +31,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    const open = computed(() => store.state.isOpenSideBar);
+    const open = computed(() => store.state.calendar.isOpenSideBar);
     return {
       store,
       open,
