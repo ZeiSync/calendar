@@ -3,16 +3,18 @@
     <Header />
     <div class="flex justify-between">
       <SideBar />
-      <FullCalendar />
+      <FullCalendar :key="key"/>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent, watch } from "vue";
 import Header from "@/components/header.vue"; // @ is an alias to /src
 import SideBar from "@/components/sidebar/index.vue";
 import FullCalendar from "@/components/full-calendar.vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Home",
@@ -20,6 +22,16 @@ export default defineComponent({
     Header,
     SideBar,
     FullCalendar
+  },
+  setup() {
+    const store = useStore();
+    const isLogin = computed(() => store.state.auth.isLogin);
+    const router = useRouter();
+
+    watch(isLogin, () => {
+      if(!isLogin.value)
+      router.push('login');
+    });
   }
 });
 </script>

@@ -9,9 +9,11 @@ import { useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
+    // update type and interface for variable and parameter
     const store = useStore();
     const router = useRouter();
     const islogin = computed(() => store.state.auth.isLogin);
+
     watch(islogin, () => {
       if(!islogin.value) {
         router.push('login');

@@ -39,7 +39,7 @@
             'text-bondi-blue': date.isPer || date.isNext,
             isActive:
               date.day === currentDate.date() &&
-              date.month === currentDate.month(),
+              date.month === currentDate.month() + 1,
           }"
           @click="updateCurrentDate(date)"
         >
@@ -76,6 +76,7 @@ export default defineComponent({
     watch(currentMonth, () => {
       getDaysInMonth(currentMonth.value);
     });
+    
     return {
       store,
       currentDate,

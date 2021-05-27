@@ -1,4 +1,4 @@
-import moment, { MomentInput } from 'moment';
+import { MomentInput } from 'moment';
 import { useStore } from 'vuex';
 
 

@@ -41,7 +41,10 @@
           <div
             class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
           >
-            <form class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4 w-full">
+            <form
+              class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4 w-full"
+              @submit.prevent="submitEventModal(event)"
+            >
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
                 for="eventTitle"
@@ -121,7 +124,6 @@
                 <button
                   type="submit"
                   class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                  @click="submitModal(event)"
                 >
                   Add Event
                 </button>
@@ -149,7 +151,7 @@ import {
   Dialog,
   DialogOverlay,
   TransitionChild,
-  TransitionRoot,
+  TransitionRoot
 } from "@headlessui/vue";
 import fullCalendar from "@/composables/full-calendar";
 import SelectMenu from "@/components/select-menu.vue";
@@ -190,12 +192,14 @@ export default defineComponent({
       event.date = datePicked.value;
     });
 
-    watch(open, () => {
-      console.log(open);
-    })
+    const submitEventModal = async (event: any) => {
+      await submitModal(event);
+      event.title = "";
+      event.description = "";
+    };
 
     return {
-      submitModal,
+      submitEventModal,
       event,
       open,
       updateModalStatus,

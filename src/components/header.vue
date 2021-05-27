@@ -39,7 +39,9 @@
       </div>
       <div class="hidden lg:flex items-center w-1/3 justify-between">
         <!-- Current date -->
-        <button class="bg-bondi-blue px-4 h-8 rounded-sm text-gallery">Today</button>
+        <button class="bg-bondi-blue px-4 h-8 rounded-sm text-gallery">
+          Today
+        </button>
         <div class="flex">
           <button class="focus:outline-none">
             <ChevronLeftIcon class="h-6 w-6 mr-2" aria-hidden="true" />
@@ -103,7 +105,8 @@
                     active ? 'bg-gray-100' : '',
                     'block px-4 py-2 text-sm text-gray-700',
                   ]"
-                  >Sign out</a
+                  @click="logout"
+                  >Log out</a
                 >
               </MenuItem>
             </MenuItems>
@@ -115,13 +118,8 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, computed } from "vue";
-import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems
-} from "@headlessui/vue";
+import { defineComponent, computed, nextTick } from "vue";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import {
   BellIcon,
   MenuIcon,
@@ -129,7 +127,7 @@ import {
   ChevronRightIcon
 } from "@heroicons/vue/outline";
 import { useStore } from "vuex";
-
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Header",
@@ -141,13 +139,23 @@ export default defineComponent({
     BellIcon,
     ChevronLeftIcon,
     ChevronRightIcon,
-    MenuIcon,
+    MenuIcon
   },
   setup() {
     const store = useStore();
+    const router = useRouter();
+
     const open = computed(() => store.state.calendar.isOpenSideBar);
     const today = computed(() => store.state.calendar.monthAndYear);
+
+    const logout = () => {
+      store.dispatch("auth/logout");
+      nextTick(() => {
+        router.push("login");
+      });
+    };
     return {
+      logout,
       store,
       open,
       today

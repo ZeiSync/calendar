@@ -28,99 +28,108 @@
           <div class="flex flex-wrap border-t border-l">
             <template v-for="(date, idx) in daysInMonth" :key="idx">
               <div
-                class="border-r border-b px-4 pt-2 h-1/6 w-1/7"
-                @click="
-                  updateModalStatus(!open);
-                  datePicked = `${date.day}-${date.month}-${date.year}`;
-                "
+                class="border-r border-b px-4 pt-2 h-1/6 w-1/7 overflow-y-auto"
                 :class="{
                   'text-bondi-blue': date.isPer || date.isNext,
                 }"
               >
-                <span
-                  :class="{
-                    'isActive rounded-full px-2 py-1':
-                      date.day === currentDate.date() &&
-                      date.month === currentDate.month(),
-                  }"
-                >
-                  {{ date.day }}
-                </span>
-              </div>
-            </template>
-            <!-- <template v-for="(date, dateIndex) in no_of_days" :key="dateIndex">
-              <div class="px-4 pt-2 border-r border-b relative h-32 w-1/7">
-                <div
-                  @click="showDayModal(date)"
-                  v-text="date"
-                  class="inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100"
-                  :class="{
-                    'bg-blue-500 text-white': isToday(date) === true,
-                    'text-gray-700 hover:bg-blue-200': isToday(date) === false,
-                  }"
-                ></div>
-                <div class="overflow-y-auto mt-1 h-20">
-                  <div
-                      class="absolute top-0 right-0 mt-2 mr-2 inline-flex items-center justify-center rounded-full text-sm w-6 h-6 bg-gray-700 text-white leading-none"
-                      x-show="events.filter(e => e.event_date === new Date(year, month, date).toDateString()).length"
-                      x-text="events.filter(e => e.event_date === new Date(year, month, date).toDateString()).length"></div>
-
-                  <template
-                    v-for="(event, idx) in events.filter(
-                      (e) =>
-                        new Date(e.event_date).toDateString() ===
-                        new Date(year, month, date).toDateString()
-                    )"
-                    :key="idx"
+                <div class="flex justify-between items-center">
+                  <span
+                    :class="{
+                      'isActive rounded-full px-2 py-1':
+                        date.day === currentDate.date() &&
+                        date.month === currentDate.month() + 1,
+                    }"
                   >
-                    <div
-                      class="px-2 py-1 rounded-lg mt-1 overflow-hidden border"
-                      :class="{
-                        'border-blue-200 text-blue-800 bg-blue-100':
-                          event.event_theme === 'blue',
-                        'border-red-200 text-red-800 bg-red-100':
-                          event.event_theme === 'red',
-                        'border-yellow-200 text-yellow-800 bg-yellow-100':
-                          event.event_theme === 'yellow',
-                        'border-green-200 text-green-800 bg-green-100':
-                          event.event_theme === 'green',
-                        'border-purple-200 text-purple-800 bg-purple-100':
-                          event.event_theme === 'purple',
-                      }"
-                    >
-                      <p
-                        v-text="event.event_title"
-                        class="text-sm truncate leading-tight"
-                      />
-                    </div>
-                  </template>
+                    {{ date.day }}
+                  </span>
+
+                  <PlusCircleIcon
+                    class="h-4 w-4"
+                    @click="
+                      updateModalStatus(!open);
+                      datePicked = `${date.day}-${date.month}-${date.year}`;
+                    "
+                  />
+                </div>
+
+                <!-- render event -->
+
+                <div v-if="date.events.length > 0">
+                  <PopoverGroup>
+                    <Popover v-for="(event, idx) in date.events" :key="idx">
+                      <PopoverButton
+                        :class="[
+                          Math.floor(Math.random() * 2)
+                            ? 'bg-bondi-blue text-bright-gray'
+                            : 'bg-bright-gray text-gallery',
+                        ]"
+                        class="flex justify-between w-full rounded-sm px-1 flex-wrap mb-1 focus:outline-none hover:bg-sinbad mt-1"
+                        ><span>
+                          {{ event.title }}
+                        </span>
+                        <span>
+                          {{ event.time }}
+                        </span>
+                      </PopoverButton>
+                      <PopoverPanel
+                        class="absolute z-10 px-4 mt-2 bg-gallery rounded-sm shadow-lg"
+                      >
+                        <div class="overflow-hidden rounded-md py-4 px-2 text-bright-gray max-w-md">
+                          <p class="text-2xl w-full">{{ event.title }}</p>
+                          <p>{{ event.detail }}</p>
+                          <div class="mt-2 mb-4">{{ event.description }}</div>
+                          <div class="w-full flex justify-end">
+                            <button
+                              class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                              @click="confirmDeleteEvent(event)"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </PopoverPanel>
+                    </Popover>
+                  </PopoverGroup>
                 </div>
               </div>
-            </template> -->
+            </template>
           </div>
         </div>
       </div>
     </div>
-    <EventModal :datePicked="datePicked"/>
+    <EventModal :datePicked="datePicked" />
   </div>
 </template>
 
 <script lang='ts'>
 import { useStore } from "vuex";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, watch } from "vue";
 import calendar from "@/composables/calendar";
 import fullCalendar from "@/composables/full-calendar";
 import EventModal from "./modal.vue";
+import {
+  Popover,
+  PopoverButton,
+  PopoverPanel,
+  PopoverGroup
+} from "@headlessui/vue";
+import { PlusCircleIcon } from "@heroicons/vue/outline";
 
 export default defineComponent({
   components: {
-    EventModal
+    EventModal,
+    Popover,
+    PopoverButton,
+    PopoverPanel,
+    PopoverGroup,
+    PlusCircleIcon
   },
   setup() {
     const store = useStore();
     const dayinWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const { incrementTheMonth, decrementTheMonth } = calendar();
-    const { updateModalStatus } = fullCalendar();
+    const { updateModalStatus, deleteEvent } = fullCalendar();
 
     const monthAndYear = computed(() => store.state.calendar.monthAndYear);
     const daysInMonth = computed(() => store.state.calendar.daysInMonth);
@@ -128,10 +137,21 @@ export default defineComponent({
     const currentDate = computed(() => store.state.calendar.currentDate);
     const datePicked = ref("");
 
+    watch(daysInMonth, () => {
+      console.log(daysInMonth.value);
+    })
+
+    const confirmDeleteEvent = (event: any) => {
+      if(confirm('Are you sure delete this event: ' + event.title)) {
+        deleteEvent(event._id);
+      }
+    }
+
     return {
+      confirmDeleteEvent,
+      open,
       datePicked,
       daysInMonth,
-      open,
       dayinWeek,
       monthAndYear,
       currentDate,

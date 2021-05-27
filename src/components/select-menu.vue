@@ -35,7 +35,7 @@
           >
             <li
               :class="[
-                active ? 'text-gallery' : 'text-gray-900',
+                active ? 'text-indigo-600' : 'text-gray-900',
                 'cursor-default select-none relative py-2 pl-3 pr-9',
               ]"
             >
